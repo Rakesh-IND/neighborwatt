@@ -296,10 +296,11 @@ flowchart LR
 ## 8. Sequence Diagram — Buyer Purchase Workflow
 
 ```mermaid
+
 sequenceDiagram
     actor Buyer
     participant BP as Buyer Portal
-    participant Auth as Authentication / Role Service
+    participant Auth as Authentication Service
     participant Market as P2P Market Service
     participant Wallet as Demo Wallet Service
     participant Ledger as Transaction Ledger
@@ -308,7 +309,7 @@ sequenceDiagram
     Buyer->>BP: Open Buyer Login
     Buyer->>BP: Submit credentials
     BP->>Auth: Authenticate as Buyer
-    Auth-->>BP: Valid Buyer role
+    Auth-->>BP: Confirm Buyer role
     BP-->>Buyer: Show Buyer Dashboard
 
     Buyer->>BP: Browse active offers
@@ -317,25 +318,29 @@ sequenceDiagram
     BP-->>Buyer: Display offers and prices
 
     Buyer->>BP: Select offer and quantity
-    BP->>Market: Check remaining quantity and price
+    BP->>Market: Validate offer and calculate cost
     Market-->>BP: Return offer details and cost
     BP-->>Buyer: Show purchase summary
     Buyer->>BP: Confirm purchase
 
     BP->>Wallet: Check Buyer demo balance
-    Wallet-->>BP: Balance sufficient / insufficient
+    Wallet-->>BP: Return balance status
+    BP->>Market: Submit purchase request
 
+    Market->>Market: Revalidate offer quantity
     alt Balance sufficient and offer available
-        BP->>Market: Commit purchase request
-        Market->>Ledger: Record trade and unique transaction ID
-        Market->>Wallet: Debit Buyer and credit Seller demo balance
-        Market->>Market: Reduce offer quantity / update status
-        Market-->>BP: Purchase successful
-        BP-->>Buyer: Show confirmation and transaction ID
+        Market->>Ledger: Record trade and transaction ID
+        Market->>Wallet: Debit Buyer and credit Seller
+        Market->>Market: Reduce offer quantity
+        Market-->>BP: Return purchase confirmation
+        BP-->>Buyer: Show transaction ID
         Market-->>Seller: Notify Seller of sale
     else Balance or quantity insufficient
-        BP-->>Buyer: Show error; do not change balances or offer
+        Market-->>BP: Reject purchase request
+        BP-->>Buyer: Show error message
+        Note over Wallet,Ledger: No balances or ledger entries are changed
     end
+
 ```
 
 ### Buyer workflow in plain English
