@@ -1,0 +1,66 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', Georgia, serif;
+
+  --color-forest: #173d2e;
+  --color-forest-deep: #0f2a20;
+  --color-forest-soft: #2c5a46;
+  --color-ivory: #f6f1e6;
+  --color-ivory-deep: #ece4d2;
+  --color-paper: #fbf8f1;
+  --color-charcoal: #1f2321;
+  --color-ink-muted: #5a625d;
+  --color-line: #d9d1bd;
+  --color-amber: #d99a2b;
+  --color-amber-soft: #f6e6bf;
+  --color-emerald: #2f8f5b;
+  --color-emerald-soft: #d7ecdf;
+  --color-slate: #4d6378;
+  --color-slate-soft: #dfe6ec;
+  --color-danger: #a8402f;
+  --color-danger-soft: #f3dcd6;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-ivory text-charcoal font-sans antialiased;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-amber);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display text-forest-deep;
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.sr-only-focusable:not(:focus) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
